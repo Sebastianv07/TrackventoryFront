@@ -1,0 +1,83 @@
+<div class="container mt-5">
+  <div class="text-center">
+    <h1 class="h4 text-gray-900 mb-4">
+      {{ editMode ? 'Editar' : 'Crear' }} Perfil
+    </h1>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" #profileForm="ngForm">
+    <!-- Campo de Nombre -->
+    <div class="form-group">
+      <label for="name">Nombre del Perfil</label>
+      <input type="text" class="form-control" id="name" placeholder="Nombre del perfil"
+             [(ngModel)]="profile.name" name="name" required>
+    </div>
+
+    <!-- Campo de Rol (Select) -->
+    <div class="form-group">
+      <label for="role">Rol</label>
+      <select class="form-control" id="role" [(ngModel)]="profile.rol_prf.id" name="role" required>
+        <option value="" disabled selected>Seleccione un rol</option>
+        <option *ngFor="let rol of roles" [value]="rol.id">{{ rol.name }}</option>
+      </select>
+    </div>
+
+    <!-- Selección de Permisos -->
+    <div class="form-group">
+      <label>Permisos</label>
+      <div class="card">
+        <div class="card-body">
+          <div *ngFor="let permission of permissionsList" class="mb-2">
+            <h6>{{ permission.form_pms.name }}</h6>
+
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"
+                     type="checkbox"
+                     [(ngModel)]="permission.C"
+                     name="create-{{ permission.form_pms.id }}">
+              <label class="form-check-label">Crear</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"
+                     type="checkbox"
+                     [(ngModel)]="permission.R"
+                     name="read-{{ permission.form_pms.id }}">
+              <label class="form-check-label">Leer</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"
+                     type="checkbox"
+                     [(ngModel)]="permission.U"
+                     name="update-{{ permission.form_pms.id }}">
+              <label class="form-check-label">Actualizar</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"
+                     type="checkbox"
+                     [(ngModel)]="permission.D"
+                     name="delete-{{ permission.form_pms.id }}">
+              <label class="form-check-label">Eliminar</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón para enviar -->
+    <button type="submit"
+            class="btn btn-primary btn-block mt-3"
+            [disabled]="!profileForm.form.valid">
+      {{ editMode ? 'Actualizar' : 'Crear' }} Perfil
+    </button>
+  </form>
+
+  <!-- Botón de regreso -->
+  <div class="text-center mt-4 mb-4">
+    <a class="btn btn-secondary" routerLink="/profiles">
+      <i class="fas fa-arrow-left"></i> Volver a la lista de perfiles
+    </a>
+  </div>
+</div>

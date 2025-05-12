@@ -1,0 +1,86 @@
+<div class="container mt-5">
+  <div class="text-center">
+    <h1 class="h4 text-gray-900 mb-4">
+      {{ editMode ? 'Editar' : 'Crear' }} Producto
+    </h1>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" #productForm="ngForm">
+    <div class="form-group">
+      <label for="reference">Referencia</label>
+      <input type="text" class="form-control" id="reference" placeholder="Referencia del producto"
+        [(ngModel)]="product.reference" name="reference" required [disabled]="editMode">
+    </div>
+
+    <div class="form-group">
+      <label for="name">Nombre</label>
+      <input type="text" class="form-control" id="name" placeholder="Nombre del producto" [(ngModel)]="product.name"
+        name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="price">Precio</label>
+      <input type="number" class="form-control" id="price" placeholder="Precio del producto" [(ngModel)]="product.price"
+        name="price" required>
+    </div>
+
+    <div class="form-group">
+      <label for="category">Categoría</label>
+      <select class="form-control" id="category" [(ngModel)]="product.category" name="category" required>
+        <option *ngFor="let category of categories" [ngValue]="category">
+          {{ category.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Sección de variaciones en una tarjeta -->
+    <div *ngIf="editMode" class="mt-4">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+          <h5 class="mb-0 text-primary">Variaciones de Producto</h5>
+          <button type="button" class="btn btn-success" (click)="openAddVariationDialog()">
+            <i class="fas fa-plus"></i> Añadir Variación
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead class="table-light">
+                <tr>
+                  <th>Código</th>
+                  <th>Color</th>
+                  <th class="text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let variation of productVariations">
+                  <td>{{ variation.code }}</td>
+                  <td>{{ variation.colorVrt.name }}</td>
+                  <td class="text-center">
+                    <button type="button" class="btn btn-sm btn-primary m-1" (click)="openEditVariationDialog(variation)">
+                      <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger m-1" (click)="deleteVariation(variation.code)">
+                      <i class="fas fa-trash"></i> Eliminar
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block mt-3" [disabled]="!productForm.form.valid">
+      {{ editMode ? 'Actualizar' : 'Crear' }} Producto
+    </button>
+  </form>
+
+  <!-- Botón de regreso -->
+  <div class="text-center mt-4 mb-4">
+    <a class="btn btn-secondary" routerLink="/products">
+      <i class="fas fa-arrow-left"></i> Volver a la lista de productos
+    </a>
+  </div>
+</div>

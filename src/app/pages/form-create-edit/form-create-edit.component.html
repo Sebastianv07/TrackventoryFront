@@ -1,0 +1,42 @@
+<div class="container mt-5">
+    <div class="text-center">
+      <h1 class="h4 text-gray-900 mb-4">
+        {{ editMode ? 'Editar' : 'Crear' }} Formulario
+      </h1>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #formForm="ngForm">
+      <!-- Campo de URL -->
+      <div class="form-group">
+        <label for="url">URL del Formulario</label>
+        <input type="text" class="form-control" id="url" placeholder="Ej: dashboard"
+          [(ngModel)]="form.url" name="url" required >
+      </div>
+
+      <!-- Campo de Nombre -->
+      <div class="form-group">
+        <label for="name">Nombre del Formulario</label>
+        <input type="text" class="form-control" id="name" placeholder="Nombre del formulario"
+          [(ngModel)]="form.name" name="name" required>
+      </div>
+
+      <!-- Campo de Ícono -->
+      <div class="form-group">
+        <label for="icon">Ícono (clase FontAwesome)</label>
+        <input type="text" class="form-control" id="icon" placeholder="Ej: fas fa-home"
+          [(ngModel)]="form.icon" name="icon">
+      </div>
+
+      <!-- Botón para enviar -->
+      <button type="submit" class="btn btn-primary btn-block mt-3" [disabled]="!formForm.form.valid">
+        {{ editMode ? 'Actualizar' : 'Crear' }} Formulario
+      </button>
+    </form>
+
+    <!-- Botón de regreso -->
+    <div class="text-center mt-4 mb-4">
+      <a class="btn btn-secondary" routerLink="/forms">
+        <i class="fas fa-arrow-left"></i> Volver a la lista de formularios
+      </a>
+    </div>
+</div>

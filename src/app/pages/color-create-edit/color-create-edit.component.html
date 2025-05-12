@@ -1,0 +1,37 @@
+<div class="container mt-5">
+  <div class="text-center">
+    <h1 class="h4 text-gray-900 mb-4">
+      {{ editMode ? 'Editar' : 'Crear' }} Color
+    </h1>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" #colorForm="ngForm">
+    <!-- Campo de Nombre -->
+    <div class="form-group">
+      <label for="name">Nombre del Color</label>
+      <input type="text" class="form-control" id="name" placeholder="Nombre del color"
+        [(ngModel)]="color.name" name="name" required >
+    </div>
+
+    <!-- Campo de Código HEX con Colorpicker -->
+    <div class="form-group">
+      <label for="hexCode">Código HEX</label>
+      <div class="input-group">
+        <input type="color" class="form-control form-control-color color-square border" id="hexCode" title="Elija el color"
+          [(ngModel)]="color.hexCode" name="hexCode" required>
+      </div>
+    </div>
+
+    <!-- Botón para enviar -->
+    <button type="submit" class="btn btn-primary btn-block mt-3" [disabled]="!colorForm.form.valid">
+      {{ editMode ? 'Actualizar' : 'Crear' }} Color
+    </button>
+  </form>
+
+  <!-- Botón de regreso -->
+  <div class="text-center mt-4 mb-4">
+    <a class="btn btn-secondary" routerLink="/colors">
+      <i class="fas fa-arrow-left"></i> Volver a la lista de colores
+    </a>
+  </div>
+</div>

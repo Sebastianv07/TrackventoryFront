@@ -1,0 +1,81 @@
+<div class="container mt-5">
+  <div class="text-center">
+    <h1 class="h4 text-gray-900 mb-4">
+      {{ editMode ? 'Editar' : 'Crear' }} Transacción
+    </h1>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" #transactionForm="ngForm">
+    <!-- Sección de detalles de la transacción -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-light d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 text-primary">Detalles de la Transacción</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th>Stock</th>
+                <th>Cantidad</th>
+                <th>Valor</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let detail of transactionDetails">
+                <td>{{ detail.stock?.id?.variationStk?.code || 'Sin Stock' }}</td>
+                <td>{{ detail.quantity }}</td>
+                <td>{{ detail.total | currency }}</td>
+                <td class="text-center">
+                  <button type="button" class="btn btn-sm btn-danger" (click)="deleteTransactionDetail(detail.id)">
+                    <i class="fas fa-trash"></i> Eliminar
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="text-end mt-3">
+          <h5>Total de la Transacción: <span class="text-success">{{ totalTransactionValue | currency }}</span></h5>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulario para agregar nuevo detalle de transacción -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-light">
+        <h5 class="mb-0 text-primary">Agregar Detalle de Transacción</h5>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label for="stock">Stock</label>
+          <select class="form-control" [(ngModel)]="newTransactionDetail.stock" name="stock" required>
+            <option *ngFor="let stock of stocks" [ngValue]="stock">{{ stock.id.variationStk.code }}</option>
+          </select>
+        </div>
+        <div class="form-group mt-2">
+          <label for="quantity">Cantidad</label>
+          <input type="number" class="form-control" [(ngModel)]="newTransactionDetail.quantity" name="quantity" required
+            [max]="newTransactionDetail.stock?.quantity || null" [min]="1" (input)="validateQuantity()">
+        </div>
+        <button type="button" class="btn btn-success mt-3" (click)="addTransactionDetail()">
+          <i class="fas fa-plus"></i> Agregar Detalle
+        </button>
+      </div>
+    </div>
+
+    <!-- Botón para enviar el formulario -->
+    <button type="submit" class="btn btn-primary btn-block mt-3"
+      [disabled]="transactionDetails.length === 0">
+      {{ editMode ? 'Actualizar' : 'Crear' }} Transacción
+    </button>
+  </form>
+
+  <!-- Botón de regreso -->
+  <div class="text-center mt-4 mb-4">
+    <a class="btn btn-secondary" routerLink="/transactions">
+      <i class="fas fa-arrow-left"></i> Volver a la lista de transacciones
+    </a>
+  </div>
+</div>

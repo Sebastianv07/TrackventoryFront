@@ -1,0 +1,43 @@
+<div class="container mt-5">
+    <div class="text-center">
+      <h1 class="h4 text-gray-900 mb-4">
+        {{ editMode ? 'Editar' : 'Crear' }} Tipo de Transacción
+      </h1>
+    </div>
+  
+    <form (ngSubmit)="onSubmit()" #transactionTypeForm="ngForm">
+      <!-- Campo de id -->
+      <div class="form-group">
+        <label for="id">Id del Tipo de Transacción</label>
+        <input type="text" class="form-control" id="id" placeholder="Ingrese el id"
+          [(ngModel)]="transactionType.id" name="id" required [disabled]="editMode">
+      </div>
+      
+      <!-- Campo de Nombre -->
+      <div class="form-group">
+        <label for="name">Nombre del Tipo de Transacción</label>
+        <input type="text" class="form-control" id="name" placeholder="Ingrese el nombre"
+          [(ngModel)]="transactionType.name" name="name" required>
+      </div>
+  
+      <!-- Campo de Descripción -->
+      <div class="form-group">
+        <label for="description">Descripción</label>
+        <textarea class="form-control" id="description" placeholder="Ingrese una descripción"
+          [(ngModel)]="transactionType.description" name="description"></textarea>
+      </div>
+  
+      <!-- Botón para enviar -->
+      <button type="submit" class="btn btn-primary btn-block mt-3" [disabled]="!transactionTypeForm.form.valid">
+        {{ editMode ? 'Actualizar' : 'Crear' }} Tipo de Transacción
+      </button>
+    </form>
+  
+    <!-- Botón de regreso -->
+    <div class="text-center mt-4 mb-4">
+      <a class="btn btn-secondary" routerLink="/transactionTypes">
+        <i class="fas fa-arrow-left"></i> Volver a la lista de tipos de transacción
+      </a>
+    </div>
+  </div>
+  

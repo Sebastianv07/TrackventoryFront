@@ -1,0 +1,83 @@
+<div class="container-fluid">
+  <!-- Encabezado -->
+  <h1 class="h3 mb-2 text-gray-800">Productos</h1>
+  <p class="mb-4">Lista de productos disponibles en el sistema.</p>
+
+  <!-- Tarjeta de filtros -->
+  <form (ngSubmit)="applyFilters()">
+    <div class="card shadow mb-4">
+      <div class="card-header bg-light d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">Filtrar Productos</h6>
+        <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+      </div>
+      <div class="card-body">
+
+        <div class="row">
+          <div class="col-md-3">
+            <label for="reference" class="form-label">Referencia</label>
+            <input type="text" class="form-control" id="reference" [(ngModel)]="filters.reference" name="reference"
+              placeholder="Filtrar por referencia">
+          </div>
+          <div class="col-md-3">
+            <label for="name" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="name" [(ngModel)]="filters.name" name="name"
+              placeholder="Filtrar por nombre">
+          </div>
+          <div class="col-md-3">
+            <label for="price" class="form-label">Precio</label>
+            <input type="number" class="form-control" id="price" [(ngModel)]="filters.price" name="price"
+              placeholder="Filtrar por precio">
+          </div>
+          <div class="col-md-3">
+            <label for="category" class="form-label">Categoría</label>
+            <select class="form-select" id="category" [(ngModel)]="filters.categoryId" name="categoryId">
+              <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </form>
+
+  <!-- Tabla de productos -->
+  <div class="card shadow mb-4">
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+      <h6 class="m-0 font-weight-bold text-primary">Lista de Productos</h6>
+      <a class="btn btn-success" routerLink="/product-create">
+        <i class="fas fa-plus"></i> Crear Producto
+      </a>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead class="table-light">
+            <tr>
+              <th>Referencia</th>
+              <th>Nombre</th>
+              <th>Precio</th>
+              <th>Categoría</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let product of products">
+              <td>{{ product.reference }}</td>
+              <td>{{ product.name }}</td>
+              <td>{{ product.price | currency }}</td>
+              <td>{{ product.category.name }}</td>
+              <td class="text-center">
+                <a class="btn btn-sm btn-primary mr-2" [routerLink]="['/product-edit', product.reference]">
+                  <i class="fas fa-edit"></i> Editar
+                </a>
+                <button class="btn btn-sm btn-danger" (click)="deleteProduct(product.reference)">
+                  <i class="fas fa-trash"></i> Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
