@@ -5,13 +5,12 @@ import { Form } from 'src/app/models/form';
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css']
+  styleUrls: ['./sidebar.component.css'],
 })
 export class SidebarComponent implements OnInit {
-
   forms: Form[] = [];
 
-  constructor(private formService: FormService) { }
+  constructor(private formService: FormService) {}
 
   ngOnInit(): void {
     this.loadForms();
@@ -20,11 +19,13 @@ export class SidebarComponent implements OnInit {
   private loadForms(): void {
     this.formService.getForms().subscribe({
       next: (data: Form[]) => {
-        this.forms = data;
+        console.log('data cruda', data);
+        this.forms = data; 
+        console.log('Formularios agrupados:', this.forms);
       },
       error: (err) => {
         console.error('Error cargando los formularios', err);
-      }
+      },
     });
   }
 }

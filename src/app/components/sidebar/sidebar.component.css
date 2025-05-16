@@ -1,12 +1,49 @@
-.sidenav-container {
-    height: 100%;
-  }
-  
-  mat-sidenav {
-    width: 250px;
-  }
-  
-  mat-nav-list {
-    padding-top: 20px;
-  }
-  
+.collapse-inner {
+  background-color: #1e3a8a !important;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.collapse-item {
+  color: #ffffff !important;
+  font-weight: 500;
+  padding: 0.35rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.collapse-item:hover,
+.collapse-item:focus {
+  color: #1e3a8a !important;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 0.25rem;
+  text-decoration: none;
+}
+
+.collapse-item i {
+  color: #ffffff !important;
+  font-size: 1.1rem;
+}
+
+.menu-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #e0e6f0;
+}
+
+.nav-link.collapsed {
+  color: #d1d9f0;
+}
+
+.nav-link.collapsed:hover {
+  color: white;
+}
+
+.collapse {
+  background-color: transparent !important;
+}

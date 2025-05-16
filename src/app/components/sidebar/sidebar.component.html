@@ -1,8 +1,13 @@
 <!-- Sidebar -->
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion h-100" id="accordionSidebar">
-  
+<ul
+  class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion h-100"
+  id="accordionSidebar"
+>
   <!-- Sidebar - Brand -->
-  <a class="sidebar-brand d-flex align-items-center justify-content-center" routerLink="/">
+  <a
+    class="sidebar-brand d-flex align-items-center justify-content-center"
+    routerLink="/"
+  >
     <div class="sidebar-brand-icon rotate-n-15">
       <i class="fas fa-clipboard-list"></i>
     </div>
@@ -10,7 +15,7 @@
   </a>
 
   <!-- Divider -->
-  <hr class="sidebar-divider my-0">
+  <hr class="sidebar-divider my-0" />
 
   <!-- Nav Item - Dashboard -->
   <li class="nav-item">
@@ -21,23 +26,56 @@
   </li>
 
   <!-- Divider -->
-  <hr class="sidebar-divider">
+  <hr class="sidebar-divider" />
 
   <!-- Menú generado dinámicamente -->
-  <li *ngFor="let form of forms" class="nav-item">
-    <a class="nav-link" [routerLink]="form.url">
-      <i class="fas fa-fw" [ngClass]="form.icon"></i>
-      <span>{{ form.name }}</span>
-    </a>
-  </li>
+  <ng-container *ngFor="let form of forms">
+    <!-- Submenú -->
+    <li class="nav-item" *ngIf="(form.children?.length || 0) > 0">
+      <a
+        class="nav-link collapsed"
+        href="#"
+        data-toggle="collapse"
+        [attr.data-target]="'#collapse' + form.id"
+        aria-expanded="true"
+        aria-controls="collapse"
+      >
+        <i class="fas fa-fw" [ngClass]="form.icon"></i>
+        <span class="menu-title">{{ form.name }}</span>
+      </a>
+      <div
+        [id]="'collapse' + form.id"
+        class="collapse"
+        aria-labelledby="heading"
+        data-parent="#accordionSidebar"
+      >
+        <div class="collapse-inner rounded">
+          <a
+            class="collapse-item"
+            *ngFor="let child of form.children"
+            [routerLink]="child.url"
+          >
+            <span class="submenu-title">{{ child.name }}</span>
+          </a>
+        </div>
+      </div>
+    </li>
+
+    <!-- Link normal -->
+    <li class="nav-item" *ngIf="!(form.children?.length || 0)">
+      <a class="nav-link" [routerLink]="form.url">
+        <i class="fas fa-fw" [ngClass]="form.icon"></i>
+        <span class="menu-title">{{ form.name }}</span>
+      </a>
+    </li>
+  </ng-container>
 
   <!-- Divider -->
-  <hr class="sidebar-divider d-none d-md-block">
+  <hr class="sidebar-divider d-none d-md-block" />
 
   <!-- Sidebar Toggler -->
   <div class="text-center d-none d-md-inline">
     <button class="rounded-circle border-0" id="sidebarToggle"></button>
   </div>
-
 </ul>
 <!-- End of Sidebar -->

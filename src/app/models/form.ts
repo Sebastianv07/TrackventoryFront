@@ -1,7 +1,8 @@
 export interface Form {
-    id: number;
-    url: string;
-    name: string;
-    icon: string;
-  }
-  
+  id: number;
+  name: string;
+  url: string;
+  icon: string;
+  parentId?: number;
+  children?: Form[];
+}

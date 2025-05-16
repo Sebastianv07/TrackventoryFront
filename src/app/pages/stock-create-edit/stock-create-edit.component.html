@@ -16,10 +16,10 @@
         <div class="modal-body">
           <!-- Variación de Producto -->
           <div class="form-group">
-            <label for="variationSelect">Variación de Producto</label>
+            <label for="variationSelect">Producto</label>
             <select class="form-control" id="variationSelect" [(ngModel)]="stock.id.variationStk" name="variationStk" required>
               <option *ngFor="let variation of productVariations" [ngValue]="variation">
-                {{ variation.code }}
+                {{ variation.colorVrt.name }}
               </option>
             </select>
           </div>
