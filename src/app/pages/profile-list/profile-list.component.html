@@ -1,11 +1,14 @@
-<div class="container-fluid">
+<div [@fadeSlideIn]>
+  <div class="container-fluid">
     <!-- Encabezado -->
     <h1 class="h3 mb-2 text-gray-800">Perfiles</h1>
     <p class="mb-4">Lista de perfiles registrados en el sistema.</p>
-  
+
     <!-- Tabla de Perfiles -->
     <div class="card shadow mb-4">
-      <div class="card-header bg-light d-flex justify-content-between align-items-center">
+      <div
+        class="card-header bg-light d-flex justify-content-between align-items-center"
+      >
         <h6 class="m-0 font-weight-bold text-primary">Lista de Perfiles</h6>
         <button class="btn btn-success m-1" routerLink="/profile-create">
           <i class="fas fa-plus"></i> Crear Perfil
@@ -28,10 +31,16 @@
                 <td>{{ profile.name }}</td>
                 <td>{{ profile.rol_prf.name }}</td>
                 <td class="text-center">
-                  <a class="btn btn-sm btn-primary mr-2" [routerLink]="['/profile-edit', profile.id]">
+                  <a
+                    class="btn btn-sm btn-primary mr-2"
+                    [routerLink]="['/profile-edit', profile.id]"
+                  >
                     <i class="fas fa-edit"></i> Editar
                   </a>
-                  <button class="btn btn-sm btn-danger" (click)="deleteProfile(profile.id)">
+                  <button
+                    class="btn btn-sm btn-danger"
+                    (click)="deleteProfile(profile.id)"
+                  >
                     <i class="fas fa-trash"></i> Eliminar
                   </button>
                 </td>
@@ -42,4 +51,4 @@
       </div>
     </div>
   </div>
-  
+</div>

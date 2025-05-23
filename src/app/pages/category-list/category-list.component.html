@@ -1,43 +1,53 @@
-<div class="container-fluid">
-  <!-- Encabezado -->
-  <h1 class="h3 mb-2 text-gray-800">Categorías de Productos</h1>
-  <p class="mb-4">Lista de categorías registradas en el sistema.</p>
+<div [@fadeSlideIn]>
+  <div class="container-fluid">
+    <!-- Encabezado -->
+    <h1 class="h3 mb-2 text-gray-800">Categorías de Productos</h1>
+    <p class="mb-4">Lista de categorías registradas en el sistema.</p>
 
-  <!-- Tabla de categorías -->
-  <div class="card shadow mb-4">
-    <div class="card-header bg-light d-flex justify-content-between align-items-center">
-      <h6 class="m-0 font-weight-bold text-primary">Lista de Categorías</h6>
-      <button class="btn btn-success m-1" routerLink="/category-create">
-        <i class="fas fa-plus"></i> Crear Categoría
-      </button>
-    </div>
-    <div class="card-body">
-      <div class="table-responsive">
-        <table class="table table-bordered">
-          <thead class="table-light">
-            <tr>
-              <th>Código</th>
-              <th>Nombre</th>
-              <th>Descripción</th>
-              <th class="text-center">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let category of categories">
-              <td>{{ category.id }}</td>
-              <td>{{ category.name }}</td>
-              <td>{{ category.description }}</td>
-              <td class="text-center">
-                <a class="btn btn-sm btn-primary mr-2" [routerLink]="['/category-edit', category.id]">
-                  <i class="fas fa-edit"></i> Editar
-                </a>
-                <button class="btn btn-sm btn-danger" (click)="deleteCategory(category.id)">
-                  <i class="fas fa-trash"></i> Eliminar
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <!-- Tabla de categorías -->
+    <div class="card shadow mb-4">
+      <div
+        class="card-header bg-light d-flex justify-content-between align-items-center"
+      >
+        <h6 class="m-0 font-weight-bold text-primary">Lista de Categorías</h6>
+        <button class="btn btn-success m-1" routerLink="/category-create">
+          <i class="fas fa-plus"></i> Crear Categoría
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let category of categories">
+                <td>{{ category.id }}</td>
+                <td>{{ category.name }}</td>
+                <td>{{ category.description }}</td>
+                <td class="text-center">
+                  <a
+                    class="btn btn-sm btn-primary mr-2"
+                    [routerLink]="['/category-edit', category.id]"
+                  >
+                    <i class="fas fa-edit"></i> Editar
+                  </a>
+                  <button
+                    class="btn btn-sm btn-danger"
+                    (click)="deleteCategory(category.id)"
+                  >
+                    <i class="fas fa-trash"></i> Eliminar
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

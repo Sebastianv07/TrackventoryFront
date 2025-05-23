@@ -7,33 +7,49 @@ import { Color } from 'src/app/models/color';
 import { ColorService } from 'src/app/services/colors.service';
 import { ProductService } from 'src/app/services/product.service';
 import { AlertService } from 'src/app/services/alert.service';
-
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-product-variation-create-edit',
   templateUrl: './product-variation-create-edit.component.html',
-  styleUrls: ['./product-variation-create-edit.component.css']
+  styleUrls: ['./product-variation-create-edit.component.css'],
+  animations: [
+    trigger('fadeSlideIn', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(10px)' }),
+        animate(
+          '200ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+      transition(':leave', [
+        animate(
+          '150ms ease-in',
+          style({ opacity: 0, transform: 'translateY(10px)' })
+        ),
+      ]),
+    ]),
+  ],
 })
 export class ProductVariationCreateEditComponent implements OnInit {
-
   productVariation: ProductVariation = {
     code: '',
     colorVrt: {
       id: 0,
       name: '',
-      hexCode: ''
+      hexCode: '',
     },
     productVrt: {
       reference: '',
       name: '',
       price: 0,
       category: {
-        id: 0, 
+        id: 0,
         // code: '',
         name: '',
-        description: ''
-      }
-    }
+        description: '',
+      },
+    },
   };
 
   colors: Color[] = [];
@@ -52,14 +68,17 @@ export class ProductVariationCreateEditComponent implements OnInit {
       this.productVariation = data.productVariation;
       this.isEditMode = true;
     } else {
-      this.productService.getProductByReference(data.productReference).subscribe({
-        next: (product) => {
-          this.productVariation.productVrt = product;
-        },
-        error: (err) => {console.error('Error obteniendo el producto', err);
-          this.alertService.showError();
-        }
-      });
+      this.productService
+        .getProductByReference(data.productReference)
+        .subscribe({
+          next: (product) => {
+            this.productVariation.productVrt = product;
+          },
+          error: (err) => {
+            console.error('Error obteniendo el producto', err);
+            this.alertService.showError();
+          },
+        });
     }
   }
 
@@ -75,22 +94,33 @@ export class ProductVariationCreateEditComponent implements OnInit {
 
   onSave(): void {
     if (this.isEditMode) {
-      this.productVariationService.updateProductVariation(this.productVariation.code, this.productVariation)
+      this.productVariationService
+        .updateProductVariation(
+          this.productVariation.code,
+          this.productVariation
+        )
         .subscribe({
-          next: () => {this.dialogRef.close(true);
+          next: () => {
+            this.dialogRef.close(true);
             this.alertService.showSuccess();
           },
-          error: (err) => {console.error('Error actualizando la variación', err);
-            this.alertService.showError();}
+          error: (err) => {
+            console.error('Error actualizando la variación', err);
+            this.alertService.showError();
+          },
         });
     } else {
-      this.productVariationService.createProductVariation(this.productVariation)
+      this.productVariationService
+        .createProductVariation(this.productVariation)
         .subscribe({
-          next: () => {this.dialogRef.close(true);
+          next: () => {
+            this.dialogRef.close(true);
             this.alertService.showSuccess();
           },
-          error: (err) => {console.error('Error creando la variación', err);
-            this.alertService.showError();}
+          error: (err) => {
+            console.error('Error creando la variación', err);
+            this.alertService.showError();
+          },
         });
     }
   }
@@ -100,6 +130,8 @@ export class ProductVariationCreateEditComponent implements OnInit {
   }
 
   compareColors(color1: any, color2: any): boolean {
-    return color1 && color2 ? color1.hexCode === color2.hexCode : color1 === color2;
-  }  
+    return color1 && color2
+      ? color1.hexCode === color2.hexCode
+      : color1 === color2;
+  }
 }

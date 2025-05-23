@@ -1,0 +1,24 @@
+.login-container {
+  height: 100vh;
+  background: linear-gradient(to right, #2c3e50, #3498db);
+}
+
+.login-card {
+  background: #ffffff;
+  border-radius: 15px;
+  overflow: hidden;
+  max-width: 900px;
+  width: 100%;
+}
+
+mat-form-field {
+  .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
+}
+
+button.btn-primary {
+  font-weight: 600;
+  padding: 12px;
+  border-radius: 8px;
+}

@@ -9,18 +9,35 @@ import { PermissionService } from 'src/app/services/permission.service';
 import { FormService } from 'src/app/services/form.service';
 import { Permission } from 'src/app/models/permission';
 import { Form } from 'src/app/models/form';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-profile-create-edit',
   templateUrl: './profile-create-edit.component.html',
-  styleUrls: ['./profile-create-edit.component.css']
+  styleUrls: ['./profile-create-edit.component.css'],
+  animations: [
+    trigger('fadeSlideIn', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(10px)' }),
+        animate(
+          '200ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+      transition(':leave', [
+        animate(
+          '150ms ease-in',
+          style({ opacity: 0, transform: 'translateY(10px)' })
+        ),
+      ]),
+    ]),
+  ],
 })
 export class ProfileCreateEditComponent implements OnInit {
-
   profile: Profile = {
     id: 0,
     name: '',
-    rol_prf: { id: 0, name: '' }
+    rol_prf: { id: 0, name: '' },
   };
 
   roles: Rol[] = [];
@@ -37,7 +54,7 @@ export class ProfileCreateEditComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private alertService: AlertService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadRoles();
@@ -48,23 +65,25 @@ export class ProfileCreateEditComponent implements OnInit {
         next: (data: Profile) => {
           this.profile = data;
           // Primero cargamos los permisos existentes
-          this.permissionService.getPermissionsByProfile(this.profile.id).subscribe({
-            next: (existingPermissions) => {
-              // Guardamos los permisos existentes en la lista
-              this.permissionsList = existingPermissions;
-              // Después cargamos los formularios y unimos ambos
-              this.loadForms(true);
-            },
-            error: (err) => {
-              console.error('Error al cargar permisos', err);
-              this.alertService.showError();
-            }
-          });
+          this.permissionService
+            .getPermissionsByProfile(this.profile.id)
+            .subscribe({
+              next: (existingPermissions) => {
+                // Guardamos los permisos existentes en la lista
+                this.permissionsList = existingPermissions;
+                // Después cargamos los formularios y unimos ambos
+                this.loadForms(true);
+              },
+              error: (err) => {
+                console.error('Error al cargar permisos', err);
+                this.alertService.showError();
+              },
+            });
         },
         error: (err) => {
           console.error('Error al cargar el perfil', err);
           this.alertService.showError();
-        }
+        },
       });
     } else {
       // Modo creación: solo cargamos formularios y creamos permisos vacíos
@@ -78,7 +97,7 @@ export class ProfileCreateEditComponent implements OnInit {
       error: (err) => {
         console.error('Error al cargar los roles', err);
         this.alertService.showError();
-      }
+      },
     });
   }
 
@@ -97,7 +116,7 @@ export class ProfileCreateEditComponent implements OnInit {
       error: (err) => {
         console.error('Error al cargar los formularios', err);
         this.alertService.showError();
-      }
+      },
     });
   }
 
@@ -110,7 +129,7 @@ export class ProfileCreateEditComponent implements OnInit {
         C: false,
         R: false,
         U: false,
-        D: false
+        D: false,
       });
     });
   }
@@ -130,7 +149,7 @@ export class ProfileCreateEditComponent implements OnInit {
           C: false,
           R: false,
           U: false,
-          D: false
+          D: false,
         });
       }
     });
@@ -148,17 +167,19 @@ export class ProfileCreateEditComponent implements OnInit {
 
   onSubmit(): void {
     if (this.editMode) {
-      this.profileService.updateProfile(this.profile.id, this.profile).subscribe({
-        next: () => {
-          this.savePermissions();
-          this.alertService.showSuccess();
-          this.router.navigate(['/profiles']);
-        },
-        error: (err) => {
-          console.error('Error actualizando el perfil', err);
-          this.alertService.showError();
-        }
-      });
+      this.profileService
+        .updateProfile(this.profile.id, this.profile)
+        .subscribe({
+          next: () => {
+            this.savePermissions();
+            this.alertService.showSuccess();
+            this.router.navigate(['/profiles']);
+          },
+          error: (err) => {
+            console.error('Error actualizando el perfil', err);
+            this.alertService.showError();
+          },
+        });
     } else {
       this.profileService.createProfile(this.profile).subscribe({
         next: (newProfile) => {
@@ -172,7 +193,7 @@ export class ProfileCreateEditComponent implements OnInit {
         error: (err) => {
           console.error('Error creando el perfil', err);
           this.alertService.showError();
-        }
+        },
       });
     }
   }
@@ -182,7 +203,7 @@ export class ProfileCreateEditComponent implements OnInit {
     this.permissionsList.forEach((perm) => {
       perm.profilePms = this.profile; // Aseguramos que tenga el perfil correcto
       this.permissionService.createPermission(perm).subscribe({
-        error: (err) => console.error('Error guardando permiso', err)
+        error: (err) => console.error('Error guardando permiso', err),
       });
     });
   }

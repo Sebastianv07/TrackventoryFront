@@ -1,13 +1,21 @@
-<div class="container-fluid">
+<div [@fadeSlideIn]>
+  <div class="container-fluid">
     <!-- Encabezado -->
     <h1 class="h3 mb-2 text-gray-800">Tipos de Transacción</h1>
     <p class="mb-4">Lista de tipos de transacción registrados en el sistema.</p>
-  
+
     <!-- Tabla de Tipos de Transacción -->
     <div class="card shadow mb-4">
-      <div class="card-header bg-light d-flex justify-content-between align-items-center">
-        <h6 class="m-0 font-weight-bold text-primary">Lista de Tipos de Transacción</h6>
-        <button class="btn btn-success m-1" routerLink="/transactionTypes-create">
+      <div
+        class="card-header bg-light d-flex justify-content-between align-items-center"
+      >
+        <h6 class="m-0 font-weight-bold text-primary">
+          Lista de Tipos de Transacción
+        </h6>
+        <button
+          class="btn btn-success m-1"
+          routerLink="/transactionTypes-create"
+        >
           <i class="fas fa-plus"></i> Crear Tipo de Transacción
         </button>
       </div>
@@ -26,12 +34,18 @@
               <tr *ngFor="let type of transactionTypes">
                 <td>{{ type.id }}</td>
                 <td>{{ type.name }}</td>
-                <td>{{ type.description || 'Sin descripción' }}</td>              
+                <td>{{ type.description || "Sin descripción" }}</td>
                 <td class="text-center">
-                  <a class="btn btn-sm btn-primary mr-2" [routerLink]="['/transactionTypes-edit', type.id]">
+                  <a
+                    class="btn btn-sm btn-primary mr-2"
+                    [routerLink]="['/transactionTypes-edit', type.id]"
+                  >
                     <i class="fas fa-edit"></i> Editar
                   </a>
-                  <button class="btn btn-sm btn-danger" (click)="deleteTransactionType(type.id)">
+                  <button
+                    class="btn btn-sm btn-danger"
+                    (click)="deleteTransactionType(type.id)"
+                  >
                     <i class="fas fa-trash"></i> Eliminar
                   </button>
                 </td>
@@ -42,4 +56,4 @@
       </div>
     </div>
   </div>
-  
+</div>

@@ -3,19 +3,36 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormService } from 'src/app/services/form.service';
 import { Form } from 'src/app/models/form';
 import { AlertService } from 'src/app/services/alert.service';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-form-create-edit',
   templateUrl: './form-create-edit.component.html',
-  styleUrls: ['./form-create-edit.component.css']
+  styleUrls: ['./form-create-edit.component.css'],
+  animations: [
+    trigger('fadeSlideIn', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(10px)' }),
+        animate(
+          '200ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+      transition(':leave', [
+        animate(
+          '150ms ease-in',
+          style({ opacity: 0, transform: 'translateY(10px)' })
+        ),
+      ]),
+    ]),
+  ],
 })
 export class FormCreateEditComponent implements OnInit {
-
   form: Form = {
-    id: 0 ,
+    id: 0,
     url: '',
     name: '',
-    icon: ''
+    icon: '',
   };
 
   editMode = false;
@@ -25,7 +42,7 @@ export class FormCreateEditComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private alertService: AlertService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
@@ -40,7 +57,7 @@ export class FormCreateEditComponent implements OnInit {
         error: (err) => {
           console.error('Error al cargar el formulario', err);
           this.alertService.showError();
-        }
+        },
       });
     }
   }
@@ -55,7 +72,7 @@ export class FormCreateEditComponent implements OnInit {
         error: (err) => {
           console.error('Error actualizando el formulario', err);
           this.alertService.showError();
-        }
+        },
       });
     } else {
       this.formService.createForm(this.form).subscribe({
@@ -66,7 +83,7 @@ export class FormCreateEditComponent implements OnInit {
         error: (err) => {
           console.error('Error creando el formulario', err);
           this.alertService.showError();
-        }
+        },
       });
     }
   }

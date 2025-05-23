@@ -4,15 +4,31 @@ import { Product } from 'src/app/models/product';
 import { ProductCategory } from 'src/app/models/productCategory';
 import { CategoryService } from 'src/app/services/category.service';
 import { AlertService } from 'src/app/services/alert.service'; // Asegúrate de importar tu servicio correctamente
-
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.css']
+  styleUrls: ['./product-list.component.css'],
+  animations: [
+    trigger('fadeSlideIn', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(10px)' }),
+        animate(
+          '200ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+      transition(':leave', [
+        animate(
+          '150ms ease-in',
+          style({ opacity: 0, transform: 'translateY(10px)' })
+        ),
+      ]),
+    ]),
+  ],
 })
 export class ProductListComponent implements OnInit {
-
   products: Product[] = [];
   categories: ProductCategory[] = [];
 
@@ -21,21 +37,21 @@ export class ProductListComponent implements OnInit {
     reference: '',
     name: '',
     price: undefined,
-    categoryId: undefined
+    categoryId: undefined,
   };
 
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
     private alertService: AlertService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     // Cargar todos los productos inicialmente
     this.loadProducts();
 
     // Cargar todas las categorías para el filtro
-    this.categoryService.getCategories().subscribe(categories => {
+    this.categoryService.getCategories().subscribe((categories) => {
       this.categories = categories;
     });
   }
@@ -43,9 +59,11 @@ export class ProductListComponent implements OnInit {
   // Método para cargar productos con o sin filtros
   loadProducts(): void {
     const { reference, name, price, categoryId } = this.filters;
-    this.productService.getFilteredProducts(reference, name, price, categoryId).subscribe(products => {
-      this.products = products;
-    });
+    this.productService
+      .getFilteredProducts(reference, name, price, categoryId)
+      .subscribe((products) => {
+        this.products = products;
+      });
   }
 
   // Aplicar los filtros
@@ -59,7 +77,7 @@ export class ProductListComponent implements OnInit {
       reference: '',
       name: '',
       price: undefined,
-      categoryId: undefined
+      categoryId: undefined,
     };
     this.loadProducts(); // Recargar la lista de productos sin filtros
   }
@@ -67,7 +85,9 @@ export class ProductListComponent implements OnInit {
   deleteProduct(reference: string): void {
     this.productService.deleteProduct(reference).subscribe(
       () => {
-        this.products = this.products.filter(product => product.reference !== reference);
+        this.products = this.products.filter(
+          (product) => product.reference !== reference
+        );
         this.alertService.showSuccess();
       },
       (error) => {

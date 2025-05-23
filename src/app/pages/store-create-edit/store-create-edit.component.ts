@@ -9,18 +9,35 @@ import { ProductVariation } from 'src/app/models/productVariation';
 import { MatDialog } from '@angular/material/dialog';
 import { StockCreateEditComponent } from '../stock-create-edit/stock-create-edit.component';
 import { AlertService } from 'src/app/services/alert.service';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-store-create-edit',
   templateUrl: './store-create-edit.component.html',
-  styleUrls: ['./store-create-edit.component.css']
+  styleUrls: ['./store-create-edit.component.css'],
+  animations: [
+    trigger('fadeSlideIn', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(10px)' }),
+        animate(
+          '200ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+      transition(':leave', [
+        animate(
+          '150ms ease-in',
+          style({ opacity: 0, transform: 'translateY(10px)' })
+        ),
+      ]),
+    ]),
+  ],
 })
 export class StoreCreateEditComponent implements OnInit {
-
   store: Store = {
     id: 0,
     code: '',
-    address: ''
+    address: '',
   };
 
   stocks: Stock[] = [];
@@ -35,7 +52,7 @@ export class StoreCreateEditComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog,
     private alertService: AlertService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -44,7 +61,7 @@ export class StoreCreateEditComponent implements OnInit {
       this.editMode = true;
       this.storeService.getStoreById(+id).subscribe((data: Store) => {
         this.store = data;
-        this.loadStoreStocks();  
+        this.loadStoreStocks();
       });
     }
   }
@@ -59,7 +76,7 @@ export class StoreCreateEditComponent implements OnInit {
         error: (err) => {
           this.alertService.showError();
           console.error('Error actualizando la tienda', err);
-        }
+        },
       });
     } else {
       this.storeService.createStore(this.store).subscribe({
@@ -70,34 +87,38 @@ export class StoreCreateEditComponent implements OnInit {
         error: (err) => {
           this.alertService.showError();
           console.error('Error creando la tienda', err);
-        }
+        },
       });
     }
   }
 
   // Cargar los stocks relacionados con la tienda
   loadStoreStocks(): void {
-    this.stockService.getStockByStoreId(this.store.id).subscribe((data: Stock[]) => {
-      this.stocks = data;
-    });
+    this.stockService
+      .getStockByStoreId(this.store.id)
+      .subscribe((data: Stock[]) => {
+        this.stocks = data;
+      });
   }
 
   // Cargar las variaciones de productos para asignarlas al stock
   loadProductVariations(): void {
-    this.productVariationService.getProductVariations().subscribe((data: ProductVariation[]) => {
-      this.productVariations = data;
-    });
+    this.productVariationService
+      .getProductVariations()
+      .subscribe((data: ProductVariation[]) => {
+        this.productVariations = data;
+      });
   }
 
   openAddStockDialog(): void {
     const dialogRef = this.dialog.open(StockCreateEditComponent, {
       width: '400px',
-      data: { storeId: this.store.id }
+      data: { storeId: this.store.id },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.loadStoreStocks();  // Recargar las variaciones después de agregar una
+        this.loadStoreStocks(); // Recargar las variaciones después de agregar una
       }
     });
   }
@@ -106,28 +127,29 @@ export class StoreCreateEditComponent implements OnInit {
   openEditStockDialog(stock: Stock): void {
     const dialogRef = this.dialog.open(StockCreateEditComponent, {
       width: '400px',
-      data: { stock: stock, storeId: this.store.id }
+      data: { stock: stock, storeId: this.store.id },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.loadStoreStocks();  // Recargar las variaciones después de editar
+        this.loadStoreStocks(); // Recargar las variaciones después de editar
       }
     });
   }
-  
+
   deleteStock(stock: Stock): void {
-    this.stockService.deleteStock(stock.id.storeStk.id, stock.id.variationStk.code).subscribe({
-      next: () => {
-        this.alertService.showSuccess();
-        this.loadStoreStocks();
-      },
-      error: (err) => {
-        console.error('Error eliminando el stock', err);
-        this.alertService.showError();
-        this.loadStoreStocks();
-      }
-    });
+    this.stockService
+      .deleteStock(stock.id.storeStk.id, stock.id.variationStk.code)
+      .subscribe({
+        next: () => {
+          this.alertService.showSuccess();
+          this.loadStoreStocks();
+        },
+        error: (err) => {
+          console.error('Error eliminando el stock', err);
+          this.alertService.showError();
+          this.loadStoreStocks();
+        },
+      });
   }
-  
 }

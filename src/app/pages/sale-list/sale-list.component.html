@@ -1,69 +1,106 @@
-<div class="container-fluid">
-  <h1 class="h3 mb-2 text-gray-800">Ventas</h1>
-  <p class="mb-4">Lista de ventas registradas en el sistema.</p>
+<div [@fadeSlideIn]>
+  <div class="container-fluid">
+    <h1 class="h3 mb-2 text-gray-800">Ventas</h1>
+    <p class="mb-4">Lista de ventas registradas en el sistema.</p>
 
-  <div class="card shadow mb-4">
-    <div class="card-header bg-light d-flex justify-content-between align-items-center">
-      <h6 class="m-0 font-weight-bold text-primary">Lista de Ventas</h6>
-      <a class="btn btn-success" routerLink="/sale-create">
-        <i class="fas fa-plus"></i> Crear Venta
-      </a>
-    </div>
-    <div class="card-body">
-      <div class="table-responsive">
-        <table class="table table-bordered">
-          <thead class="table-light">
-            <tr>
-              <th>ID</th>
-              <th>Fecha de Venta</th>
-              <th class="text-center">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <ng-container *ngFor="let sale of sales">
+    <div class="card shadow mb-4">
+      <div
+        class="card-header bg-light d-flex justify-content-between align-items-center"
+      >
+        <h6 class="m-0 font-weight-bold text-primary">Lista de Ventas</h6>
+        <div>
+          <button
+            class="btn btn-danger me-2"
+            (click)="downloadPDF()"
+            [disabled]="sales.length === 0"
+          >
+            <i class="fas fa-file-pdf"></i> Informe Ventas
+          </button>
+          <a class="btn btn-success" routerLink="/sale-create">
+            <i class="fas fa-plus"></i> Crear Venta
+          </a>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead class="table-light">
               <tr>
-                <td>{{ sale.id }}</td>
-                <td>{{ sale.date | date: 'short' }}</td>
-                <td class="text-center">
-                  <button class="btn btn-sm btn-primary" (click)="toggleDetails(sale.id)">
-                    <i class="fas" [ngClass]="{'fa-eye': selectedSaleId !== sale.id, 'fa-eye-slash': selectedSaleId === sale.id}"></i>
-                    {{ selectedSaleId === sale.id ? 'Ocultar Detalles' : 'Ver Detalles' }}
-                  </button>
-                </td>
+                <th>ID</th>
+                <th>Fecha de Venta</th>
+                <th class="text-center">Acciones</th>
               </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let sale of sales">
+                <tr>
+                  <td>{{ sale.id }}</td>
+                  <td>{{ sale.date | date : "short" }}</td>
+                  <td class="text-center">
+                    <button
+                      class="btn btn-sm btn-primary me-2"
+                      (click)="toggleDetails(sale.id)"
+                    >
+                      <i
+                        class="fas"
+                        [ngClass]="{
+                          'fa-eye': selectedSaleId !== sale.id,
+                          'fa-eye-slash': selectedSaleId === sale.id
+                        }"
+                      ></i>
+                      {{
+                        selectedSaleId === sale.id
+                          ? "Ocultar Detalles"
+                          : "Ver Detalles"
+                      }}
+                    </button>
+                    <button
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="downloadSalePDF(sale)"
+                    >
+                      <i class="fas fa-file-pdf"></i> PDF
+                    </button>
+                  </td>
+                </tr>
 
-              <tr *ngIf="selectedSaleId === sale.id">
-                <td colspan="3">
-                  <div class="p-3">
-                    <h5>Detalles de Venta (ID: {{ sale.id }})</h5>
-                    <table class="table table-sm table-bordered mt-2">
-                      <thead>
-                        <tr>
-                          <th>Producto</th>
-                          <th>Cantidad</th>
-                          <th>Valor Total</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let detail of saleDetails">
-                          <td>{{ detail.stock?.id?.variationStk?.productVrt?.name }}</td>
-                          <td>{{ detail.quantity }}</td>
-                          <td>{{ detail.total | currency }}</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                <tr *ngIf="selectedSaleId === sale.id">
+                  <td colspan="3">
+                    <div class="p-3">
+                      <h5>Detalles de Venta (ID: {{ sale.id }})</h5>
+                      <table class="table table-sm table-bordered mt-2">
+                        <thead>
+                          <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Valor Total</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let detail of saleDetails">
+                            <td>
+                              {{
+                                detail.stock?.id?.variationStk?.productVrt?.name
+                              }}
+                            </td>
+                            <td>{{ detail.quantity }}</td>
+                            <td>{{ detail.total | currency }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
 
-                    <div class="text-end mt-3">
-                      <strong>Total de la Venta:</strong>
-                      <span class="text-success">{{ totalSaleValue | currency }}</span>
+                      <div class="text-end mt-3">
+                        <strong>Total de la Venta:</strong>
+                        <span class="text-success">{{
+                          totalSaleValue | currency
+                        }}</span>
+                      </div>
                     </div>
-
-                  </div>
-                </td>
-              </tr>
-            </ng-container>
-          </tbody>
-        </table>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

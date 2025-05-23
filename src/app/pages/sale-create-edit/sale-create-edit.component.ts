@@ -8,20 +8,37 @@ import { Stock } from 'src/app/models/stock';
 import { AlertService } from 'src/app/services/alert.service';
 import { LoginService } from 'src/app/services/login.service';
 import { TransactionTypes } from 'src/app/models/transactionTypes';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-sale-create-edit',
   templateUrl: './sale-create-edit.component.html',
-  styleUrls: ['./sale-create-edit.component.css']
+  styleUrls: ['./sale-create-edit.component.css'],
+  animations: [
+    trigger('fadeSlideIn', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(10px)' }),
+        animate(
+          '200ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
+      ]),
+      transition(':leave', [
+        animate(
+          '150ms ease-in',
+          style({ opacity: 0, transform: 'translateY(10px)' })
+        ),
+      ]),
+    ]),
+  ],
 })
 export class SaleCreateEditComponent implements OnInit {
-
   transaction: Transactions = {
     id: 0,
     buyer: null, // Puedes cambiar esto si tienes un comprador registrado
     seller: null, // Se puede obtener del usuario logueado
     date: new Date(),
-    transactionType: { id: 1, name: "Venta" } // Tipo de transacción 1 = Venta
+    transactionType: { id: 1, name: 'Venta' }, // Tipo de transacción 1 = Venta
   };
 
   transactionDetails: TransactionDetails[] = [];
@@ -31,7 +48,7 @@ export class SaleCreateEditComponent implements OnInit {
     transaction: this.transaction,
     stock: null,
     quantity: 0,
-    total: 0
+    total: 0,
   };
 
   stocks: Stock[] = [];
@@ -44,59 +61,72 @@ export class SaleCreateEditComponent implements OnInit {
     private router: Router,
     private alertService: AlertService,
     private login: LoginService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     this.loadStocks();
     if (id) {
       this.editMode = true;
-      this.transactionService.getTransactionById(+id).subscribe((data: Transactions) => {
-        this.transaction = data;
-        this.loadTransactionDetails();
-      });
+      this.transactionService
+        .getTransactionById(+id)
+        .subscribe((data: Transactions) => {
+          this.transaction = data;
+          this.loadTransactionDetails();
+        });
     }
   }
 
   // Cargar los detalles de la transacción
   loadTransactionDetails(): void {
-    this.transactionService.getTransactionDetailsByTransactionId(this.transaction.id).subscribe((data: TransactionDetails[]) => {
-      this.transactionDetails = data;
-    });
+    this.transactionService
+      .getTransactionDetailsByTransactionId(this.transaction.id)
+      .subscribe((data: TransactionDetails[]) => {
+        this.transactionDetails = data;
+      });
   }
 
   // Cargar los stocks disponibles
   loadStocks(): void {
     this.stockService.getAllStocks().subscribe((data: Stock[]) => {
-      this.stocks = data.filter(stock => stock.quantity > 0);
+      this.stocks = data.filter((stock) => stock.quantity > 0);
     });
   }
 
   onSubmit(): void {
     if (this.transactionDetails.length === 0) {
-      this.alertService.showError('Debe agregar al menos un detalle de transacción.');
+      this.alertService.showError(
+        'Debe agregar al menos un detalle de transacción.'
+      );
       return;
     }
 
-    const sellerId = 0; 
-    const buyerId = 0; 
+    const sellerId = 0;
+    const buyerId = 0;
 
-    this.transactionService.saveTransaction(this.transactionDetails, buyerId, sellerId, 1).subscribe({
-      next: () => {
-        this.alertService.showSuccess();
-        this.router.navigate(['/sales']);
-      },
-      error: (err) => {
-        this.alertService.showError();
-        console.error('Error creando la transacción', err);
-      }
-    });
+    this.transactionService
+      .saveTransaction(this.transactionDetails, buyerId, sellerId, 1)
+      .subscribe({
+        next: () => {
+          this.alertService.showSuccess();
+          this.router.navigate(['/sales']);
+        },
+        error: (err) => {
+          this.alertService.showError();
+          console.error('Error creando la transacción', err);
+        },
+      });
   }
 
   // Agregar un nuevo detalle de transacción
   addTransactionDetail(): void {
-    if (this.newTransactionDetail.stock && this.newTransactionDetail.quantity > 0) {
-      this.newTransactionDetail.total = this.newTransactionDetail.stock.id.variationStk.productVrt.price * this.newTransactionDetail.quantity;
+    if (
+      this.newTransactionDetail.stock &&
+      this.newTransactionDetail.quantity > 0
+    ) {
+      this.newTransactionDetail.total =
+        this.newTransactionDetail.stock.id.variationStk.productVrt.price *
+        this.newTransactionDetail.quantity;
       this.transactionDetails.push({ ...this.newTransactionDetail });
       this.transactionDetails = [...this.transactionDetails];
 
@@ -106,22 +136,26 @@ export class SaleCreateEditComponent implements OnInit {
         transaction: this.transaction,
         stock: null,
         quantity: 0,
-        total: 0
+        total: 0,
       };
     } else {
-      this.alertService.showError('Debe llenar todos los campos correctamente.');
+      this.alertService.showError(
+        'Debe llenar todos los campos correctamente.'
+      );
     }
   }
 
   // Eliminar un detalle de transacción
   deleteTransactionDetail(transactionDetailId: number): void {
-    this.transactionDetails = this.transactionDetails.filter(detail => detail.id !== transactionDetailId);
+    this.transactionDetails = this.transactionDetails.filter(
+      (detail) => detail.id !== transactionDetailId
+    );
   }
 
   validateQuantity(): void {
     const maxQuantity = this.newTransactionDetail.stock?.quantity || Infinity;
     const minQuantity = 1;
-  
+
     if (this.newTransactionDetail.quantity > maxQuantity) {
       this.newTransactionDetail.quantity = maxQuantity;
     } else if (this.newTransactionDetail.quantity < minQuantity) {
@@ -130,6 +164,9 @@ export class SaleCreateEditComponent implements OnInit {
   }
 
   get totalTransactionValue(): number {
-    return this.transactionDetails.reduce((total, detail) => total + (detail.total || 0), 0);
+    return this.transactionDetails.reduce(
+      (total, detail) => total + (detail.total || 0),
+      0
+    );
   }
 }

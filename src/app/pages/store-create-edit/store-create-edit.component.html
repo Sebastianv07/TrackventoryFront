@@ -1,105 +1,107 @@
-<div class="container mt-5">
-  <div class="text-center">
-    <h1 class="h4 text-gray-900 mb-4">
-      {{ editMode ? "Editar" : "Crear" }} Tienda
-    </h1>
-  </div>
-
-  <form (ngSubmit)="onSubmit()" #storeForm="ngForm">
-    <div class="form-group">
-      <label for="code">Código</label>
-      <input
-        type="text"
-        class="form-control"
-        id="code"
-        placeholder="Código de la tienda"
-        [(ngModel)]="store.code"
-        name="code"
-        required
-      />
+<div [@fadeSlideIn]>
+  <div class="container mt-5">
+    <div class="text-center">
+      <h1 class="h4 text-gray-900 mb-4">
+        {{ editMode ? "Editar" : "Crear" }} Tienda
+      </h1>
     </div>
 
-    <div class="form-group">
-      <label for="address">Dirección</label>
-      <input
-        type="text"
-        class="form-control"
-        id="address"
-        placeholder="Dirección de la tienda"
-        [(ngModel)]="store.address"
-        name="address"
-        required
-      />
-    </div>
+    <form (ngSubmit)="onSubmit()" #storeForm="ngForm">
+      <div class="form-group">
+        <label for="code">Código</label>
+        <input
+          type="text"
+          class="form-control"
+          id="code"
+          placeholder="Código de la tienda"
+          [(ngModel)]="store.code"
+          name="code"
+          required
+        />
+      </div>
 
-    <!-- Sección de Stocks -->
-    <div *ngIf="editMode" class="mt-4">
-      <div class="card shadow-sm">
-        <div
-          class="card-header bg-light d-flex justify-content-between align-items-center"
-        >
-          <h5 class="mb-0 text-primary">Stocks</h5>
-          <button
-            type="button"
-            class="btn btn-success"
-            (click)="openAddStockDialog()"
+      <div class="form-group">
+        <label for="address">Dirección</label>
+        <input
+          type="text"
+          class="form-control"
+          id="address"
+          placeholder="Dirección de la tienda"
+          [(ngModel)]="store.address"
+          name="address"
+          required
+        />
+      </div>
+
+      <!-- Sección de Stocks -->
+      <div *ngIf="editMode" class="mt-4">
+        <div class="card shadow-sm">
+          <div
+            class="card-header bg-light d-flex justify-content-between align-items-center"
           >
-            <i class="fas fa-plus"></i> Añadir Stock
-          </button>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-bordered">
-              <thead class="table-light">
-                <tr>
-                  <th>Codigo Variacion Producto</th>
-                  <th>Descripcion Producto</th>
-                  <th>Cantidad</th>
-                  <th class="text-center">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let stock of stocks">
-                  <td>{{ stock.id.variationStk.code }}</td>
-                  <td>{{ stock.id.variationStk.colorVrt.name }}</td>
-                  <td>{{ stock.quantity }}</td>
-                  <td class="text-center">
-                    <button
-                      type="button"
-                      class="btn btn-sm btn-primary m-1"
-                      (click)="openEditStockDialog(stock)"
-                    >
-                      <i class="fas fa-edit"></i> Editar
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-sm btn-danger m-1"
-                      (click)="deleteStock(stock)"
-                    >
-                      <i class="fas fa-trash"></i> Eliminar
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <h5 class="mb-0 text-primary">Stocks</h5>
+            <button
+              type="button"
+              class="btn btn-success"
+              (click)="openAddStockDialog()"
+            >
+              <i class="fas fa-plus"></i> Añadir Stock
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead class="table-light">
+                  <tr>
+                    <th>Codigo Variacion Producto</th>
+                    <th>Descripcion Producto</th>
+                    <th>Cantidad</th>
+                    <th class="text-center">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let stock of stocks">
+                    <td>{{ stock.id.variationStk.code }}</td>
+                    <td>{{ stock.id.variationStk.colorVrt.name }}</td>
+                    <td>{{ stock.quantity }}</td>
+                    <td class="text-center">
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-primary m-1"
+                        (click)="openEditStockDialog(stock)"
+                      >
+                        <i class="fas fa-edit"></i> Editar
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-danger m-1"
+                        (click)="deleteStock(stock)"
+                      >
+                        <i class="fas fa-trash"></i> Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-block mt-3"
+        [disabled]="!storeForm.form.valid"
+      >
+        {{ editMode ? "Actualizar" : "Crear" }} Tienda
+      </button>
+    </form>
+
+    <!-- Botón de regreso -->
+    <div class="text-center mt-4 mb-4">
+      <a class="btn btn-secondary" routerLink="/stores">
+        <i class="fas fa-arrow-left"></i> Volver a la lista de tiendas
+      </a>
     </div>
-
-    <button
-      type="submit"
-      class="btn btn-primary btn-block mt-3"
-      [disabled]="!storeForm.form.valid"
-    >
-      {{ editMode ? "Actualizar" : "Crear" }} Tienda
-    </button>
-  </form>
-
-  <!-- Botón de regreso -->
-  <div class="text-center mt-4 mb-4">
-    <a class="btn btn-secondary" routerLink="/stores">
-      <i class="fas fa-arrow-left"></i> Volver a la lista de tiendas
-    </a>
   </div>
 </div>

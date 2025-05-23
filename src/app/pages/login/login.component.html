@@ -1,56 +1,33 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-xl-10 col-lg-12 col-md-9">
-      <div class="card o-hidden border-0 shadow-lg my-5">
-        <div class="card-body p-0">
-          <div class="row">
-            <!-- Imagen a la izquierda en pantallas grandes -->
-            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+<div class="login-container d-flex align-items-center justify-content-center">
+  <div class="login-card shadow-lg">
+    <div class="row g-0">
+      <!-- Imagen lateral -->
+      <div class="col-md-6 d-none d-md-block login-image"></div>
 
-            <!-- Formulario de login -->
-            <div class="col-lg-6">
-              <div class="p-5">
-                <div class="text-center">
-                  <h1 class="h4 text-gray-900 mb-4">Inicio de sesión</h1>
-                </div>
+      <!-- Formulario -->
+      <div class="col-md-6 p-5 d-flex flex-column justify-content-center">
+        <div class="text-center mb-4">
+          <h2 class="text-primary fw-bold">Bienvenido</h2>
+          <p class="text-muted">Inicia sesión para continuar</p>
+        </div>
 
-                <form (ngSubmit)="formSubmit()" class="user">
-                  <div class="form-group">
-                    <mat-form-field class="full-width" appearance="outline">
-                      <mat-label>Nombre de usuario</mat-label>
-                      <input [(ngModel)]="loginData.username" name="username" required matInput
-                        placeholder="Digite su nombre de usuario">
-                      <mat-hint>El nombre de usuario debe ser válido</mat-hint>
-                    </mat-form-field>
-                  </div>
+        <form (ngSubmit)="formSubmit()" class="user">
+          <mat-form-field appearance="outline" class="w-100 mb-3">
+            <mat-label>Usuario</mat-label>
+            <input matInput required [(ngModel)]="loginData.username" name="username" placeholder="Ingresar usuario" />
+          </mat-form-field>
 
-                  <div class="form-group">
-                    <mat-form-field class="full-width" appearance="outline">
-                      <mat-label>Contraseña</mat-label>
-                      <input [(ngModel)]="loginData.password" name="password" required type="password" matInput
-                        placeholder="Digite su contraseña">
-                      <mat-hint>La contraseña debe ser válida</mat-hint>
-                    </mat-form-field>
-                  </div>
+          <mat-form-field appearance="outline" class="w-100 mb-4">
+            <mat-label>Contraseña</mat-label>
+            <input matInput required type="password" [(ngModel)]="loginData.password" name="password" />
+          </mat-form-field>
 
-                  <button type="submit" class="btn btn-primary btn-user btn-block">
-                    Iniciar sesión
-                  </button>
-                </form>
+          <button type="submit" class="btn btn-primary w-100 mb-3">Iniciar sesión</button>
+        </form>
 
-                <hr>
-
-                <div class="text-center">
-                  <a class="small" href="/forgot-password">¿Olvidaste tu contraseña?</a>
-                </div>
-                <div class="text-center">
-                  <button mat-button color="accent" [routerLink]="'/signup'">Registrarse</button>
-                </div>
-
-              </div>
-            </div>
-
-          </div>
+        <div class="text-center">
+          <a class="small d-block mb-2 text-decoration-none" href="/forgot-password">¿Olvidaste tu contraseña?</a>
+          <a class="small text-decoration-none" [routerLink]="'/signup'">Registrarse</a>
         </div>
       </div>
     </div>

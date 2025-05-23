@@ -50,13 +50,16 @@
         data-parent="#accordionSidebar"
       >
         <div class="collapse-inner rounded">
-          <a
-            class="collapse-item"
-            *ngFor="let child of form.children"
-            [routerLink]="child.url"
-          >
-            <span class="submenu-title">{{ child.name }}</span>
-          </a>
+          <ng-container *ngFor="let child of form.children">
+            <a
+              class="collapse-item"
+              *ngIf="child && child.name && child.url"
+              [routerLink]="child.url"
+              (click)="closeAllSubmenus()"
+            >
+              <span class="submenu-title">{{ child.name }}</span>
+            </a>
+          </ng-container>
         </div>
       </div>
     </li>
@@ -75,7 +78,11 @@
 
   <!-- Sidebar Toggler -->
   <div class="text-center d-none d-md-inline">
-    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    <button
+      class="rounded-circle border-0"
+      id="sidebarToggle"
+      (click)="toggleSidebar()"
+    ></button>
   </div>
 </ul>
 <!-- End of Sidebar -->
