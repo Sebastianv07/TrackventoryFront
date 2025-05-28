@@ -4,13 +4,13 @@ import { Observable } from 'rxjs';
 import { Transactions } from '../models/trasanctions';
 import { TransactionDetails } from '../models/transactionDetails';
 import { TransactionTypes } from '../models/transactionTypes';
-
+import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TransactionService {
-  private baseUrl = 'http://localhost:8080/transactions'; 
+  private baseUrl = `${environment.urlApi}/transactions`;
 
   constructor(private http: HttpClient) {}
 
@@ -25,29 +25,36 @@ export class TransactionService {
   }
 
   // Obtener los detalles de una transacción específica
-  getTransactionDetailsByTransactionId(id: number): Observable<TransactionDetails[]> {
+  getTransactionDetailsByTransactionId(
+    id: number
+  ): Observable<TransactionDetails[]> {
     return this.http.get<TransactionDetails[]>(`${this.baseUrl}/${id}/details`);
   }
 
   saveTransaction(
-    transactionDetails: TransactionDetails[], 
-    buyerId: number, 
-    sellerId: number, 
+    transactionDetails: TransactionDetails[],
+    buyerId: number,
+    sellerId: number,
     transactionType: number
   ): Observable<Transactions> {
     const params = new HttpParams()
       .set('buyerId', buyerId.toString())
       .set('sellerId', sellerId.toString())
-      .set('transactionType', transactionType.toString()); 
-  
-    return this.http.post<Transactions>(`${this.baseUrl}/save`, transactionDetails, { params });
+      .set('transactionType', transactionType.toString());
+
+    return this.http.post<Transactions>(
+      `${this.baseUrl}/save`,
+      transactionDetails,
+      { params }
+    );
   }
-  
-  
 
   // Obtener transacciones por tipo de transacción
   getTransactionsByType(transactionTypeId: number): Observable<Transactions[]> {
-    const params = new HttpParams().set('transactionTypeId', transactionTypeId.toString());
+    const params = new HttpParams().set(
+      'transactionTypeId',
+      transactionTypeId.toString()
+    );
     return this.http.get<Transactions[]>(`${this.baseUrl}/by-type`, { params });
   }
 

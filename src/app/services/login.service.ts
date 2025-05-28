@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import baserUrl from './helper';
+import { environment } from 'src/environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +15,11 @@ export class LoginService {
 
   //generamos el token
   public generateToken(loginData:any){
-    return this.http.post(`${baserUrl}/generate-token`,loginData);
+    return this.http.post(`${environment.urlApi}/generate-token`,loginData);
   }
 
   public getCurrentUser(){
-    return this.http.get(`${baserUrl}/actualUser`);
+    return this.http.get(`${environment.urlApi}/actualUser`);
   }
 
   //iniciamos sesión y establecemos el token en el localStorage

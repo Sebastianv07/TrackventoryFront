@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Sale } from '../models/sale';
 import { SaleDetail } from '../models/saleDetail';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SaleService {
-  private baseUrl = 'http://localhost:8080/sales'; // Cambia esto a la URL base de tu API
+  private baseUrl = `${environment.urlApi}/sales`; // Cambia esto a la URL base de tu API
 
   constructor(private http: HttpClient) {}
 
@@ -30,7 +31,7 @@ export class SaleService {
   // Método para guardar o actualizar una venta
   saveSale(saleDetails: SaleDetail[]): Observable<Sale> {
     return this.http.post<Sale>(`${this.baseUrl}/save`, saleDetails);
-  }  
+  }
 
   // Método para eliminar una venta por ID
   deleteSale(id: number): Observable<void> {
