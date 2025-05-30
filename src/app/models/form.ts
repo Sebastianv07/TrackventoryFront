@@ -4,5 +4,5 @@ export interface Form {
   url: string;
   icon: string;
   parentId?: number;
-  children?: Form[];
+  children: Form[];
 }

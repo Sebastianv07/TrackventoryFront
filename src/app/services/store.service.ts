@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Store } from '../models/store';
 import baserUrl from './helper';  // Asume que tienes una configuración de URL base.
+import { storeStock } from '../models/storeStock';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,10 @@ export class StoreService {
 
   getStores(): Observable<Store[]> {
     return this.httpClient.get<Store[]>(`${baserUrl}/stores`);
+  }
+
+   getStoresStock(id: number): Observable<storeStock[]> {
+    return this.httpClient.get<storeStock[]>(`${baserUrl}/stores/by-store/${id}`);
   }
 
   getStoreById(id: number): Observable<Store> {

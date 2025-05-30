@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { StockCreateEditComponent } from '../stock-create-edit/stock-create-edit.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { storeStock } from 'src/app/models/storeStock';
 
 @Component({
   selector: 'app-store-create-edit',
@@ -40,7 +41,8 @@ export class StoreCreateEditComponent implements OnInit {
     address: '',
   };
 
-  stocks: Stock[] = [];
+  storeStock: storeStock[] = [];
+  stock: Stock[] = [];
   productVariations: ProductVariation[] = [];
   editMode = false;
 
@@ -62,6 +64,7 @@ export class StoreCreateEditComponent implements OnInit {
       this.storeService.getStoreById(+id).subscribe((data: Store) => {
         this.store = data;
         this.loadStoreStocks();
+        this.loadStocks();
       });
     }
   }
@@ -92,12 +95,28 @@ export class StoreCreateEditComponent implements OnInit {
     }
   }
 
+  getRelatedStock(storeItem: storeStock): Stock | undefined {
+    return this.stock.find(
+      (s) =>
+        String(s.id.storeStk.id) === String(storeItem.id) &&
+        String(s.id.variationStk.code) === String(storeItem.codeVariation)
+    );
+  }
+
   // Cargar los stocks relacionados con la tienda
   loadStoreStocks(): void {
+    this.storeService
+      .getStoresStock(this.store.id)
+      .subscribe((data: storeStock[]) => {
+        this.storeStock = data;
+      });
+  }
+
+  loadStocks(): void {
     this.stockService
       .getStockByStoreId(this.store.id)
       .subscribe((data: Stock[]) => {
-        this.stocks = data;
+        this.stock = data;
       });
   }
 
@@ -143,12 +162,12 @@ export class StoreCreateEditComponent implements OnInit {
       .subscribe({
         next: () => {
           this.alertService.showSuccess();
-          this.loadStoreStocks();
+          this.loadStocks();
         },
         error: (err) => {
           console.error('Error eliminando el stock', err);
           this.alertService.showError();
-          this.loadStoreStocks();
+          this.loadStocks();
         },
       });
   }

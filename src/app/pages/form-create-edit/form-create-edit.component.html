@@ -17,7 +17,6 @@
           placeholder="Ej: dashboard"
           [(ngModel)]="form.url"
           name="url"
-          required
         />
       </div>
 
@@ -46,6 +45,57 @@
           [(ngModel)]="form.icon"
           name="icon"
         />
+      </div>
+
+      <!-- Subformularios -->
+      <div class="form-group">
+        <label>Subformularios</label>
+
+        <div
+          class="border p-3 mb-2"
+          *ngFor="let child of form.children || []; let i = index"
+        >
+          <div class="form-row">
+            <div class="col">
+              <input
+                type="text"
+                class="form-control mb-2"
+                placeholder="Nombre del subformulario"
+                [(ngModel)]="form.children[i].name"
+                name="childName{{ i }}"
+                required
+              />
+            </div>
+            <div class="col">
+              <input
+                type="text"
+                class="form-control mb-2"
+                placeholder="URL del subformulario"
+                [(ngModel)]="form.children[i].url"
+                name="childUrl{{ i }}"
+                required
+              />
+            </div>
+            <div class="col-auto">
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="removeChild(i)"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botón para agregar nuevo hijo -->
+        <button
+          type="button"
+          class="btn btn-outline-success"
+          (click)="addChild()"
+        >
+          <i class="fas fa-plus"></i> Agregar Subformulario
+        </button>
       </div>
 
       <!-- Botón para enviar -->

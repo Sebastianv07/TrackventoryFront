@@ -53,32 +53,40 @@
               <table class="table table-bordered">
                 <thead class="table-light">
                   <tr>
-                    <th>Codigo Variacion Producto</th>
+                    <th>Codigo Tienda</th>
                     <th>Descripcion Producto</th>
-                    <th>Cantidad</th>
+                    <th>Codigo Variacion</th>
+                    <th>Cantida</th>
+                    <th>Codigo Color</th>
+                    <th>Color</th>
                     <th class="text-center">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let stock of stocks">
-                    <td>{{ stock.id.variationStk.code }}</td>
-                    <td>{{ stock.id.variationStk.colorVrt.name }}</td>
-                    <td>{{ stock.quantity }}</td>
+                  <tr *ngFor="let st of storeStock">
+                    <td>{{ st.codeStore }}</td>
+                    <td>{{ st.nameProduct }}</td>
+                    <td>{{ st.codeVariation }}</td>
+                    <td>{{ st.stock }}</td>
+                    <td>{{ st.colorVrt }}</td>
+                    <td>{{ st.nameColor }}</td>
                     <td class="text-center">
-                      <button
-                        type="button"
-                        class="btn btn-sm btn-primary m-1"
-                        (click)="openEditStockDialog(stock)"
-                      >
-                        <i class="fas fa-edit"></i> Editar
-                      </button>
-                      <button
-                        type="button"
-                        class="btn btn-sm btn-danger m-1"
-                        (click)="deleteStock(stock)"
-                      >
-                        <i class="fas fa-trash"></i> Eliminar
-                      </button>
+                      <ng-container *ngIf="getRelatedStock(st) as relatedStock">
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-primary m-1"
+                          (click)="openEditStockDialog(relatedStock)"
+                        >
+                          <i class="fas fa-edit"></i> Editar
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-danger m-1"
+                          (click)="deleteStock(relatedStock)"
+                        >
+                          <i class="fas fa-trash"></i> Eliminar
+                        </button>
+                      </ng-container>
                     </td>
                   </tr>
                 </tbody>

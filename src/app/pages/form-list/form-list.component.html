@@ -22,6 +22,7 @@
                 <th>URL</th>
                 <th>Nombre</th>
                 <th>Ícono</th>
+                <th>Sub Formularios</th>
                 <th class="text-center">Acciones</th>
               </tr>
             </thead>
@@ -30,6 +31,17 @@
                 <td>{{ form.url }}</td>
                 <td>{{ form.name }}</td>
                 <td><i class="fas fa-fw {{ form.icon }}"></i></td>
+                <td>
+                  <ul *ngIf="getValidChildren(form.children).length > 0">
+                    <li *ngFor="let child of getValidChildren(form.children)">
+                      {{ child.name }}
+                    </li>
+                  </ul>
+                  <span
+                    *ngIf="getValidChildren(form.children).length === 0"
+                  ></span>
+                </td>
+
                 <td class="text-center">
                   <a
                     class="btn btn-sm btn-primary mr-2"

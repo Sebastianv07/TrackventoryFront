@@ -5,6 +5,7 @@ import { TransactionDetails } from 'src/app/models/transactionDetails';
 import { trigger, transition, style, animate } from '@angular/animations';
 import autoTable from 'jspdf-autotable';
 import { jsPDF } from 'jspdf';
+import { Sale } from 'src/app/models/sale';
 
 @Component({
   selector: 'app-sale-list',
@@ -71,188 +72,108 @@ export class SaleListComponent implements OnInit {
     }
   }
 
-  async downloadPDF(): Promise<void> {
-    const doc = new jsPDF();
+  downloadSalePDF(sale: Transactions): void {
+    this.transactionService
+      .getTransactionDetailsByTransactionId(sale.id)
+      .subscribe({
+        next: (details: TransactionDetails[]) => {
+          const doc = new jsPDF();
+          let y = 10;
+          doc.text('DETALLE DE VENTA', 10, y);
+          y += 10;
 
-    doc.setFontSize(18);
-    doc.setTextColor(40);
-    doc.text('Reporte de Ventas', 14, 22);
+          doc.text(`ID: ${sale.id}`, 10, y);
+          y += 10;
+          doc.text(`Fecha: ${sale.date}`, 10, y);
+          y += 10;
+          doc.text(`Total: ${this.calculateTotalValue(details)}`, 10, y);
+          y += 10;
 
-    doc.setFontSize(11);
-    doc.setTextColor(100);
-    doc.text(`Generado el: ${new Date().toLocaleDateString('es-ES')}`, 14, 30);
+          doc.text('Detalles:', 10, y);
+          y += 10;
 
-    let yPosition = 40;
-
-    if (this.sales.length === 0) {
-      doc.text('No hay ventas registradas', 14, yPosition);
-      doc.save(`ventas_${new Date().toISOString().split('T')[0]}.pdf`);
-      return;
-    }
-    for (let i = 0; i < this.sales.length; i++) {
-      const sale = this.sales[i];
-
-      if (yPosition > 250) {
-        doc.addPage();
-        yPosition = 20;
-      }
-
-      doc.setFontSize(14);
-      doc.setTextColor(40);
-      doc.text(`Venta ID: ${sale.id}`, 14, yPosition);
-      doc.text(
-        `Fecha: ${new Date(sale.date).toLocaleDateString('es-ES')}`,
-        14,
-        yPosition + 8
-      );
-
-      yPosition += 20;
-
-      try {
-        const details = await this.getSaleDetailsForPDF(sale.id);
-
-        if (details && details.length > 0) {
-          const tableData = details.map((detail) => [
-            detail.stock?.id?.variationStk?.productVrt?.name || 'N/A',
-            detail.quantity.toString(),
-            `$${detail.total.toLocaleString('es-ES', {
-              minimumFractionDigits: 2,
-            })}`,
-          ]);
-
-          autoTable(doc, {
-            startY: yPosition,
-            head: [['Producto', 'Cantidad', 'Valor Total']],
-            body: tableData,
-            theme: 'striped',
-            headStyles: { fillColor: [52, 152, 219] },
-            margin: { left: 14, right: 14 },
-            styles: { fontSize: 10 },
+          details.forEach((detail, index) => {
+            const unitPrice =
+              detail.quantity > 0
+                ? (detail.total / detail.quantity).toFixed(2)
+                : '0.00';
+            doc.text(
+              `${index + 1}., Cantidad: ${
+                detail.quantity
+              }, Precio Unitario: ${unitPrice}, Total: ${detail.total}`,
+              10,
+              y
+            );
+            y += 10;
+            if (y > 270) {
+              doc.addPage();
+              y = 10;
+            }
           });
 
-          yPosition = (doc as any).lastAutoTable.finalY + 10;
-          const saleTotal = details.reduce(
-            (sum, detail) => sum + detail.total,
-            0
-          );
-          doc.setFontSize(12);
-          doc.setTextColor(40);
-          doc.text(
-            `Total: $${saleTotal.toLocaleString('es-ES', {
-              minimumFractionDigits: 2,
-            })}`,
-            14,
-            yPosition
-          );
-
-          yPosition += 20;
-        } else {
-          doc.setFontSize(10);
-          doc.setTextColor(100);
-          doc.text('Sin detalles disponibles', 14, yPosition);
-          yPosition += 15;
-        }
-      } catch (error) {
-        console.error(
-          `Error obteniendo detalles para venta ${sale.id}:`,
-          error
-        );
-        doc.setFontSize(10);
-        doc.setTextColor(100);
-        doc.text('Error al cargar detalles', 14, yPosition);
-        yPosition += 15;
-      }
-
-      if (i < this.sales.length - 1) {
-        doc.setDrawColor(200);
-        doc.line(14, yPosition, 196, yPosition);
-        yPosition += 10;
-      }
-    }
-
-    doc.save(`ventas_${new Date().toISOString().split('T')[0]}.pdf`);
-  }
-
-  downloadSalePDF(sale: any): void {
-    const doc = new jsPDF();
-
-    doc.setFontSize(18);
-    doc.setTextColor(40);
-    doc.text('Detalle de Venta', 14, 22);
-
-    doc.setFontSize(12);
-    doc.text(`ID de Venta: ${sale.id}`, 14, 35);
-    doc.text(
-      `Fecha: ${new Date(sale.date).toLocaleDateString('es-ES')}`,
-      14,
-      45
-    );
-    doc.text(
-      `Hora: ${new Date(sale.date).toLocaleTimeString('es-ES')}`,
-      14,
-      55
-    );
-
-    this.getSaleDetailsForPDF(sale.id).then((details) => {
-      if (details && details.length > 0) {
-        const tableData = details.map((detail) => [
-          detail.stock?.id?.variationStk?.productVrt?.name || 'N/A',
-          detail.quantity.toString(),
-          `$${detail.total.toLocaleString('es-ES', {
-            minimumFractionDigits: 2,
-          })}`,
-        ]);
-
-        autoTable(doc, {
-          startY: 70,
-          head: [['Producto', 'Cantidad', 'Valor Total']],
-          body: tableData,
-          theme: 'striped',
-          headStyles: { fillColor: [52, 152, 219] },
-          margin: { left: 14, right: 14 },
-        });
-
-        const total = details.reduce((sum, detail) => sum + detail.total, 0);
-        const finalY = (doc as any).lastAutoTable.finalY + 15;
-
-        doc.setFontSize(14);
-        doc.setTextColor(40);
-        doc.text(
-          `Total de la Venta: $${total.toLocaleString('es-ES', {
-            minimumFractionDigits: 2,
-          })}`,
-          14,
-          finalY
-        );
-
-        doc.save(
-          `venta_${sale.id}_${new Date().toISOString().split('T')[0]}.pdf`
-        );
-      } else {
-        doc.text('No se encontraron detalles para esta venta', 14, 70);
-        doc.save(
-          `venta_${sale.id}_${new Date().toISOString().split('T')[0]}.pdf`
-        );
-      }
-    });
-  }
-  private async getSaleDetailsForPDF(saleId: number): Promise<any[]> {
-    try {
-      if (
-        this.selectedSaleId === saleId &&
-        this.saleDetails &&
-        this.saleDetails.length > 0
-      ) {
-        return this.saleDetails;
-      }
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve([]);
-        }, 100);
+          doc.save(`venta_${sale.id}.pdf`);
+        },
+        error: (err) => console.error('Error al obtener detalles:', err),
       });
-    } catch (error) {
-      console.error('Error obteniendo detalles de venta:', error);
-      return [];
-    }
+  }
+
+  downloadPDF(): void {
+    const doc = new jsPDF();
+    let y = 10;
+
+    doc.text('INFORME COMPLETO DE VENTAS', 10, y);
+    y += 10;
+
+    const promises = this.sales.map((sale) =>
+      this.transactionService
+        .getTransactionDetailsByTransactionId(sale.id)
+        .toPromise()
+    );
+
+    Promise.all(promises).then((allDetails) => {
+      this.sales.forEach((sale, index) => {
+        doc.text(
+          `Venta #${sale.id} - Fecha: ${sale.date}`,
+          10,
+          y
+        );
+        y += 10;
+
+        const details = allDetails[index];
+        if (details && details.length > 0) {
+          details.forEach((detail: TransactionDetails, i: number) => {
+            const name =
+              detail.stock?.id?.variationStk?.productVrt?.name || 'Desconocido';
+            const unitPrice =
+              detail.quantity > 0
+                ? (detail.total / detail.quantity).toFixed(2)
+                : '0.00';
+            doc.text(
+              `   ${i + 1}. Producto: ${name}, Cantidad: ${
+                detail.quantity
+              }, Precio Unitario: ${unitPrice}, Total: ${detail.total}`,
+              10,
+              y
+            );
+            y += 10;
+            if (y > 270) {
+              doc.addPage();
+              y = 10;
+            }
+          });
+        } else {
+          doc.text('   Sin detalles disponibles', 10, y);
+          y += 10;
+        }
+
+        y += 10;
+        if (y > 270) {
+          doc.addPage();
+          y = 10;
+        }
+      });
+
+      doc.save('informe_ventas.pdf');
+    });
   }
 }

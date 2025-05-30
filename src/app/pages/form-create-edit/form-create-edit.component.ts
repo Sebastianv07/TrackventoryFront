@@ -13,16 +13,10 @@ import { trigger, transition, style, animate } from '@angular/animations';
     trigger('fadeSlideIn', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(10px)' }),
-        animate(
-          '200ms ease-out',
-          style({ opacity: 1, transform: 'translateY(0)' })
-        ),
+        animate('200ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
       ]),
       transition(':leave', [
-        animate(
-          '150ms ease-in',
-          style({ opacity: 0, transform: 'translateY(10px)' })
-        ),
+        animate('150ms ease-in', style({ opacity: 0, transform: 'translateY(10px)' })),
       ]),
     ]),
   ],
@@ -33,6 +27,7 @@ export class FormCreateEditComponent implements OnInit {
     url: '',
     name: '',
     icon: '',
+    children: [],  
   };
 
   editMode = false;
@@ -53,6 +48,9 @@ export class FormCreateEditComponent implements OnInit {
       this.formService.getFormById(id).subscribe({
         next: (data: Form) => {
           this.form = data;
+          if (!this.form.children) {
+            this.form.children = [];
+          }
         },
         error: (err) => {
           console.error('Error al cargar el formulario', err);
@@ -86,5 +84,19 @@ export class FormCreateEditComponent implements OnInit {
         },
       });
     }
+  }
+
+  addChild(): void {
+    this.form.children?.push({
+      id: 0,
+      url: '',
+      name: '',
+      icon: '',
+      children: [], // 
+    });
+  }
+
+  removeChild(index: number): void {
+    this.form.children?.splice(index, 1);
   }
 }

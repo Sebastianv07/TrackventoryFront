@@ -62,4 +62,11 @@ export class FormListComponent implements OnInit {
       }
     );
   }
+
+  getValidChildren(children: any[] | undefined): any[] {
+    if (!children) return [];
+    return children.filter(
+      (child) => child && child.name && child.name.trim() !== ''
+    );
+  }
 }
