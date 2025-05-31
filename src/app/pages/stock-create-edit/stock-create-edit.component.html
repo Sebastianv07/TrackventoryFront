@@ -4,7 +4,7 @@
       <div class="modal-content">
         <!-- Encabezado -->
         <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title">
+          <h5 class="modal-title" style="font-weight: bold; color: white">
             {{ isEditMode ? "Editar Stock" : "Crear Stock" }}
           </h5>
           <button type="button" class="close" (click)="onCancel()">
@@ -17,7 +17,7 @@
           <div class="modal-body">
             <!-- Variación de Producto -->
             <div class="form-group">
-              <label for="variationSelect">Producto</label>
+              <label for="variationSelect">Seleccionar Referencia</label>
               <select
                 class="form-control"
                 id="variationSelect"
@@ -29,7 +29,8 @@
                   *ngFor="let variation of productVariations"
                   [ngValue]="variation"
                 >
-                  {{ variation.productVrt.name }}
+                  Producto: {{ variation.productVrt.name }} | Color:
+                  {{ variation.colorVrt.name }}
                 </option>
               </select>
             </div>
