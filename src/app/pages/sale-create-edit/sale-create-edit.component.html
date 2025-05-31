@@ -71,7 +71,8 @@
               required
             >
               <option *ngFor="let stock of stocks" [ngValue]="stock">
-                {{ stock.id.variationStk.code }}
+                Producto: {{ stock.id.variationStk.productVrt.name }} | Color:
+                {{ stock.id.variationStk.colorVrt.name }}
               </option>
             </select>
           </div>
