@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  urlApi : "localhost:8080"
+  urlApi : "https://ppi-deploys.uc.r.appspot.com"
 
 };

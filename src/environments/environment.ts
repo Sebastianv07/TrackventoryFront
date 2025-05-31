@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  urlApi : "http://localhost:8080"
+  urlApi : "https://ppi-deploys.uc.r.appspot.com"
 };
 
 /*

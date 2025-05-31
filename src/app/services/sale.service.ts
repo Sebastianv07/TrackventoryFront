@@ -8,7 +8,7 @@ import { SaleDetail } from '../models/saleDetail';
   providedIn: 'root'
 })
 export class SaleService {
-  private baseUrl = 'http://localhost:8080/sales'; // Cambia esto a la URL base de tu API
+  private baseUrl = 'https://ppi-deploys.uc.r.appspot.com/sales'; // Cambia esto a la URL base de tu API
 
   constructor(private http: HttpClient) {}
 

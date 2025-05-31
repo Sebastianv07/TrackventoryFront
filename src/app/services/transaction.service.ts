@@ -10,7 +10,7 @@ import { TransactionTypes } from '../models/transactionTypes';
   providedIn: 'root'
 })
 export class TransactionService {
-  private baseUrl = 'http://localhost:8080/transactions'; 
+  private baseUrl = 'https://ppi-deploys.uc.r.appspot.com/transactions'; 
 
   constructor(private http: HttpClient) {}
 
